@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   UseInterceptors,
   UploadedFile,
@@ -8,6 +9,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateTicketDto } from './DTO/ticket.dto';
 import { BookTicketService } from './book_ticket.service';
+// import { get } from 'http';/
 
 @Controller('book-ticket')
 export class BookTicketController {
@@ -40,5 +42,9 @@ export class BookTicketController {
     };
 
     return await this.bookTicketService.createTicket(ticketData);
+  }
+  @Get('/movie')
+  async getTicket() {
+    return await this.bookTicketService.getTicket();
   }
 }

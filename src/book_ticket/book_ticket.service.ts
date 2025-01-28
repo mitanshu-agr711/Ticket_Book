@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import type { Express } from 'express';
+// import type { Express } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TicketName } from './schema/ticket';
@@ -45,5 +45,8 @@ export class BookTicketService {
     } catch (error: any) {
       throw new BadRequestException('Failed to upload image: ' + error.message);
     }
+  }
+  async getTicket() {
+    return await this.ticketModel.find();
   }
 }

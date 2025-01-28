@@ -1,8 +1,6 @@
 import { v2 } from 'cloudinary';
 import { CLOUDINARY } from './cloudinary.constants';
 
-// declare const LOCAL_CLOUDINARY: unique symbol;
-
 export const CloudinaryProvider = {
   provide: CLOUDINARY,
   useFactory: () => {
