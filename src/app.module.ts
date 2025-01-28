@@ -1,28 +1,39 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BookTicketModule } from './book_ticket/book_ticket.module';
-// import { GeneTicketController } from './gene_ticket/gene_ticket.controller';
-
-if (!process.env.DB_URL) {
-  throw new Error('DATABASE  is not defined in the environment variables.');
-}
-const dbUri: string = process.env.DB_URL;
+import { CloudinaryModule } from './clodinary/cloudinary.module';
+import { CloudinaryService } from './clodinary/clodinary.service';
 
 @Module({
-  //make .env file global
   imports: [
+    // Global configuration module
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
+      envFilePath: '.env', // Path to the .env file
     }),
-    MongooseModule.forRoot(dbUri),
+
+    // Mongoose setup with async configuration
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const dbUri = configService.get<string>('DB_URL');
+        // console.log('DB_URL:', dbUri);
+        if (!dbUri) {
+          throw new Error(
+            'DATABASE is not defined in the environment variables.',
+          );
+        }
+        console.log(' successfully Connecting to DB:');
+        return { uri: dbUri };
+      },
+    }),
+
+    // BookTicket feature module
     BookTicketModule,
+
+    CloudinaryModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [CloudinaryService],
 })
 export class AppModule {}

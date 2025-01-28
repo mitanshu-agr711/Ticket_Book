@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class Tickets {
-  @Prop({ required: true, trim: true })
+  @Prop({ unique: true, required: true, trim: true })
   title!: string;
 
   @Prop({ required: true, trim: true })
@@ -23,5 +23,5 @@ export class Tickets {
   image!: string;
 }
 
-export const TicketName = 'Ticket'; // MongoDB collection name
+export const TicketName = 'Ticket';
 export const TicketSchema = SchemaFactory.createForClass(Tickets);
