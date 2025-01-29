@@ -74,4 +74,45 @@ export class UserDetailsService {
       throw new BadRequestException('An unexpected error occurred');
     }
   }
+  async getCustomer(email: string) {
+    return await this.userModel.findOne({ email });
+  }
+
+  async getBooked(movie?: string, date?: string, timing?: string) {
+    if (!movie) {
+      throw new Error('Movie name is required');
+    }
+
+    if (movie && !timing && !date) {
+      // Case 1:
+      return await this.userModel.find(
+        { movie },
+        { date: 1, timing: 1, _id: 0 },
+      );
+    }
+
+    if (movie && timing && date) {
+      console.log('Date:', date);
+      // Case 2:
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0); 
+     console.log('Start of Day:', startOfDay);
+      const bookedSeats = await this.userModel.find(
+        { movie, timing, date: startOfDay }, 
+        { Name: 1, email: 1, Seats: 1, _id: 0 },
+      );
+      const totalSeats = 100;
+      const bookedSeatsCount = bookedSeats.reduce(
+        (sum, user) => sum + user.Seats.length,
+        0,
+      );
+      const seatsLeft = totalSeats - bookedSeatsCount;
+      console.log('Seats Left:', seatsLeft);
+      console.log('Booked Seats:', bookedSeats);
+
+      return { bookedSeats, seatsLeft };
+    }
+
+    return [];
+  }
 }

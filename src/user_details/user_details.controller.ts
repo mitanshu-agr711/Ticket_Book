@@ -1,7 +1,13 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../DTO/user.dto';
 import { UserDetailsService } from './user_details.service';
-// import { ErrorResponse } from '../types/errorResponse';
 
 @Controller('user-details')
 export class UserDetailsController {
@@ -13,11 +19,38 @@ export class UserDetailsController {
       const result = await this.userService.createUser(createUserDto);
       return result;
     } catch (error) {
-      if (error instanceof Error) {
-        throw new BadRequestException(error.message);
-      } else {
-        throw new BadRequestException('An unknown error occurred');
-      }
+      throw new BadRequestException(
+        (error as any).message || 'An unknown error occurred',
+      );
     }
+  }
+
+  @Get('/customer')
+  async getCustomer(@Query('email') email: string) {
+    if (!email) {
+      throw new BadRequestException('Email query parameter is required');
+    }
+    return await this.userService.getCustomer(email);
+  }
+
+  @Get('/details')
+  async getBooked(
+    @Query('movie') movie?: string,
+    @Query('timing') timing?: string,
+    @Query('date') date?: string,
+  ) {
+    if (!movie) {
+      throw new BadRequestException('Movie query parameter is required');
+    }
+    let parsedDate: string | undefined;
+
+    if (date) {
+     
+      const dateParts = date.split('-');
+      const isoDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`; 
+      parsedDate = isoDate;
+    }
+
+    return await this.userService.getBooked(movie, parsedDate, timing);
   }
 }
