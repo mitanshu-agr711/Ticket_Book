@@ -19,7 +19,7 @@ export class AuthService {
     ) {
       throw new Error('Invalid user object');
     }
-
+    // console.log(user);
     const payload: JwtPayload = {
       email: user.email,
       name: user.Name,

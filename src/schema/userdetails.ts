@@ -6,7 +6,7 @@ export class User {
   @Prop({ required: true })
   Name!: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })
   email!: string;
 
   @Prop({ required: true, type: [String] })
