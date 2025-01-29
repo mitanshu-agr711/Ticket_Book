@@ -7,7 +7,7 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateTicketDto } from './DTO/ticket.dto';
+import { CreateTicketDto } from '../DTO/ticket.dto';
 import { BookTicketService } from './book_ticket.service';
 // import { get } from 'http';/
 

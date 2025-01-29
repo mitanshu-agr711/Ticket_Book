@@ -2,8 +2,8 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 // import type { Express } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TicketName } from './schema/ticket';
-import { CreateTicketDto } from './DTO/ticket.dto';
+import { TicketName } from '../schema/ticket';
+import { CreateTicketDto } from '../DTO/ticket.dto';
 import { CloudinaryService } from '../clodinary/clodinary.service';
 
 @Injectable()

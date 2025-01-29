@@ -4,21 +4,24 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BookTicketModule } from './book_ticket/book_ticket.module';
 import { CloudinaryModule } from './clodinary/cloudinary.module';
 import { CloudinaryService } from './clodinary/clodinary.service';
+import { UserDetailsController } from './user_details/user_details.controller';
+import { UserDetailsService } from './user_details/user_details.service';
+import { UserDetailsModule } from './user_details/user_details.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from './jwt-strategy/jwt-strategy.service';
 
 @Module({
   imports: [
-    // Global configuration module
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env', // Path to the .env file
+      envFilePath: '.env',
     }),
 
-    // Mongoose setup with async configuration
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const dbUri = configService.get<string>('DB_URL');
-        // console.log('DB_URL:', dbUri);
+
         if (!dbUri) {
           throw new Error(
             'DATABASE is not defined in the environment variables.',
@@ -29,11 +32,15 @@ import { CloudinaryService } from './clodinary/clodinary.service';
       },
     }),
 
-    // BookTicket feature module
     BookTicketModule,
 
     CloudinaryModule,
+
+    UserDetailsModule,
+
+    AuthModule,
   ],
-  providers: [CloudinaryService],
+  providers: [CloudinaryService, UserDetailsService, JwtStrategy],
+  controllers: [UserDetailsController],
 })
 export class AppModule {}
